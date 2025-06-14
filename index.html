@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediCare Pro - Medical Practice Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #212227dc 0%, #392e44 100%);
+            min-height: 100vh;
+            color: #f2ec2f;
+            font-weight: 600;
+            font-size: large;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(15, 23, 85, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #f2ec2f;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .logo-text {
+            font-size: 28px;
+            font-weight: 700;
+            color: #f2ec2f;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(15, 23, 85, 0.95);
+            padding: 10px 20px;
+            border-radius: 25px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #f2ec2f;
+            font-weight: bold;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .sidebar {
+            background: rgba(15, 23, 85, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+        }
+
+        .main-panel {
+            background: rgba(15, 23, 85, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #f2ec2f;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            border-radius: 2px;
+        }
+
+        .patient-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .patient-item {
+            background: rgba(15, 23, 85, 0.95);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .patient-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-color: #4CAF50;
+        }
+
+        .patient-item.selected {
+            background: linear-gradient(45deg, #e8f5e8, #f0f8f0);
+            border-color: #4CAF50;
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.2);
+        }
+
+        .patient-name {
+            font-weight: 600;
+            color: #f2ec2f;
+            margin-bottom: 5px;
+        }
+
+        .patient-id {
+            font-size: 12px;
+            color: #f2ec2f;
+            background: rgba(15, 23, 85, 0.95);
+            padding: 2px 8px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 5px;
+        }
+
+        .patient-info {
+            font-size: 14px;
+            color: #f2ec2f;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #f2ec2f;
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: rgba(15, 23, 85, 0.95);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: #f2ec2f;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #6c757d, #5a6268);
+        }
+
+        .btn-secondary:hover {
+            box-shadow: 0 5px 15px rgba(108, 117, 125, 0.3);
+        }
+
+        .prescription-display {
+            background: rgba(15, 23, 85, 0.95);
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .prescription-display.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .prescription-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .prescription-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #f2ec2f;
+        }
+
+        .prescription-date {
+            font-size: 14px;
+            color: #f2ec2f;
+            background: rgba(15, 23, 85, 0.95);
+            padding: 5px 10px;
+            border-radius: 20px;
+        }
+
+        .prescription-content {
+            line-height: 1.6;
+            color: #f2ec2f;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4CAF50;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .status-badge {
+            padding: 4px 6px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            
+        }
+
+        .status-active {
+            background: rgba(50, 204, 189, 0.95);
+            color: #144e22;
+            font-size: 16px;
+            
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .add-patient-form {
+            background: rgba(15, 23, 85, 0.95);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .add-patient-form.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">M+</div>
+                <div class="logo-text">MediCare Pro</div>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">DR</div>
+                <div>
+                    <div style="font-weight: 600;">Dr. Sarah Johnson</div>
+                    <div style="font-size: 12px; color: #666;">Internal Medicine</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="section-title">Patient Management</div>
+                
+                <button class="btn btn-secondary" onclick="toggleAddPatient()" style="width: 100%; margin-bottom: 20px;">
+                    + Add New Patient
+                </button>
+
+                <div class="add-patient-form" id="addPatientForm">
+                    <div class="form-group">
+                        <label class="form-label">Patient Name</label>
+                        <input type="text" class="form-input" id="newPatientName" placeholder="Enter full name">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Age</label>
+                        <input type="number" class="form-input" id="newPatientAge" placeholder="Enter age">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Gender</label>
+                        <select class="form-input" id="newPatientGender">
+                            <option value="">Select gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Medical History</label>
+                        <textarea class="form-input" id="newPatientHistory" placeholder="Enter medical history"></textarea>
+                    </div>
+                    <button class="btn" onclick="addPatient()" style="width: 100%;">Add Patient</button>
+                </div>
+
+                <div class="patient-list" id="patientList">
+                    <div class="patient-item" onclick="selectPatient(this, 'P001')">
+                        <div class="patient-name">John Smith</div>
+                        <div class="patient-id">ID: P001</div>
+                        <div class="patient-info">Age: 45 | Male</div>
+                        <div class="patient-info">Last Visit: March 15, 2025</div>
+                        <span class="status-badge status-active">Active</span>
+                    </div>
+                    
+                    <div class="patient-item" onclick="selectPatient(this, 'P002')">
+                        <div class="patient-name">Emily Davis</div>
+                        <div class="patient-id">ID: P002</div>
+                        <div class="patient-info">Age: 32 | Female</div>
+                        <div class="patient-info">Last Visit: March 10, 2025</div>
+                        <span class="status-badge status-pending">Follow-up</span>
+                    </div>
+                    
+                    <div class="patient-item" onclick="selectPatient(this, 'P003')">
+                        <div class="patient-name">Michael Johnson</div>
+                        <div class="patient-id">ID: P003</div>
+                        <div class="patient-info">Age: 28 | Male</div>
+                        <div class="patient-info">Last Visit: March 8, 2025</div>
+                        <span class="status-badge status-active">Active</span>
+                    </div>
+                    
+                    <div class="patient-item" onclick="selectPatient(this, 'P004')">
+                        <div class="patient-name">Sarah Wilson</div>
+                        <div class="patient-id">ID: P004</div>
+                        <div class="patient-info">Age: 55 | Female</div>
+                        <div class="patient-info">Last Visit: March 5, 2025</div>
+                        <span class="status-badge status-active">Active</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="main-panel">
+                <div class="section-title">Patient Consultation</div>
+                
+                <div id="noPatientSelected" style="text-align: center; padding: 40px; color: #666;">
+                    <div style="font-size: 48px; margin-bottom: 15px;">👥</div>
+                    <div style="font-size: 18px; margin-bottom: 10px;">No Patient Selected</div>
+                    <div>Please select a patient from the sidebar to begin consultation</div>
+                </div>
+
+                <div id="consultationForm" style="display: none;">
+                    <div class="form-group">
+                        <label class="form-label">Selected Patient</label>
+                        <div id="selectedPatientInfo" style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Chief Complaint</label>
+                        <input type="text" class="form-input" id="chiefComplaint" placeholder="Enter primary complaint">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Symptoms</label>
+                        <textarea class="form-input form-textarea" id="symptoms" placeholder="Describe symptoms in detail..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Duration</label>
+                        <input type="text" class="form-input" id="duration" placeholder="e.g., 3 days, 2 weeks">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Severity (1-10)</label>
+                        <input type="range" class="form-input" id="severity" min="1" max="10" value="5" oninput="updateSeverity(this.value)">
+                        <div style="text-align: center; margin-top: 5px; font-weight: 600;" id="severityValue">5 - Moderate</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Vital Signs</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <input type="text" class="form-input" id="bloodPressure" placeholder="Blood Pressure">
+                            <input type="text" class="form-input" id="temperature" placeholder="Temperature">
+                            <input type="text" class="form-input" id="heartRate" placeholder="Heart Rate">
+                            <input type="text" class="form-input" id="respiratoryRate" placeholder="Respiratory Rate">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Additional Notes</label>
+                        <textarea class="form-input" id="additionalNotes" placeholder="Any additional observations or notes..."></textarea>
+                    </div>
+
+                    <button class="btn" onclick="generatePrescription()" style="width: 100%; font-size: 18px; padding: 15px;">
+                        🔬 Generate AI Prescription
+                    </button>
+
+                    <div class="loading" id="loadingSpinner">
+                        <div class="spinner"></div>
+                        <div>AI is analyzing symptoms and generating prescription...</div>
+                    </div>
+
+                    <div class="prescription-display" id="prescriptionDisplay">
+                        <div class="prescription-header">
+                            <div class="prescription-title">AI Generated Prescription</div>
+                            <div class="prescription-date" id="prescriptionDate"></div>
+                        </div>
+                        <div class="prescription-content" id="prescriptionContent"></div>
+                        <div style="margin-top: 20px; display: flex; gap: 10px;">
+                            <button class="btn" onclick="savePrescription()">💾 Save Prescription</button>
+                            <button class="btn btn-secondary" onclick="printPrescription()">🖨️ Print</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedPatientId = null;
+        let patientData = {
+            'P001': {
+                name: 'John Smith',
+                age: 45,
+                gender: 'Male',
+                history: 'Hypertension, Diabetes Type 2',
+                lastVisit: 'March 15, 2025'
+            },
+            'P002': {
+                name: 'Emily Davis',
+                age: 32,
+                gender: 'Female',
+                history: 'Asthma, Allergies',
+                lastVisit: 'March 10, 2025'
+            },
+            'P003': {
+                name: 'Michael Johnson',
+                age: 28,
+                gender: 'Male',
+                history: 'No significant history',
+                lastVisit: 'March 8, 2025'
+            },
+            'P004': {
+                name: 'Sarah Wilson',
+                age: 55,
+                gender: 'Female',
+                history: 'Osteoarthritis, High Cholesterol',
+                lastVisit: 'March 5, 2025'
+            }
+        };
+
+        function selectPatient(element, patientId) {
+            // Remove previous selection
+            document.querySelectorAll('.patient-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            // Add selection to clicked patient
+            element.classList.add('selected');
+            selectedPatientId = patientId;
+            
+            // Hide no patient selected message
+            document.getElementById('noPatientSelected').style.display = 'none';
+            
+            // Show consultation form
+            document.getElementById('consultationForm').style.display = 'block';
+            
+            // Update selected patient info
+            const patient = patientData[patientId];
+            document.getElementById('selectedPatientInfo').innerHTML = `
+                <strong>${patient.name}</strong> (ID: ${patientId})<br>
+                Age: ${patient.age} | Gender: ${patient.gender}<br>
+                Medical History: ${patient.history}<br>
+                Last Visit: ${patient.lastVisit}
+            `;
+        }
+
+        function updateSeverity(value) {
+            const severityLabels = {
+                1: '1 - Minimal', 2: '2 - Mild', 3: '3 - Mild', 4: '4 - Moderate', 5: '5 - Moderate',
+                6: '6 - Moderate', 7: '7 - Severe', 8: '8 - Severe', 9: '9 - Very Severe', 10: '10 - Extreme'
+            };
+            document.getElementById('severityValue').textContent = severityLabels[value];
+        }
+
+        function generatePrescription() {
+            if (!selectedPatientId) {
+                alert('Please select a patient first');
+                return;
+            }
+
+            const symptoms = document.getElementById('symptoms').value;
+            const chiefComplaint = document.getElementById('chiefComplaint').value;
+            
+            if (!symptoms || !chiefComplaint) {
+                alert('Please enter chief complaint and symptoms');
+                return;
+            }
+
+            // Show loading
+            document.getElementById('loadingSpinner').classList.add('show');
+            document.getElementById('prescriptionDisplay').classList.remove('show');
+
+            // Simulate AI processing
+            setTimeout(() => {
+                document.getElementById('loadingSpinner').classList.remove('show');
+                
+                // Generate prescription based on symptoms
+                const prescription = generateAIPrescription(chiefComplaint, symptoms);
+                
+                document.getElementById('prescriptionContent').innerHTML = prescription;
+                document.getElementById('prescriptionDate').textContent = new Date().toLocaleDateString();
+                document.getElementById('prescriptionDisplay').classList.add('show');
+            }, 3000);
+        }
+
+        function generateAIPrescription(complaint, symptoms) {
+            // Simple AI-like prescription generation based on keywords
+            const patient = patientData[selectedPatientId];
+            
+            let diagnosis = '';
+            let medications = [];
+            let instructions = '';
+            
+            const symptomsLower = (complaint + ' ' + symptoms).toLowerCase();
+            
+            if (symptomsLower.includes('fever') || symptomsLower.includes('headache')) {
+                diagnosis = 'Viral Fever / Upper Respiratory Infection';
+                medications = [
+                    'Paracetamol 500mg - Take 1 tablet every 6 hours as needed for fever',
+                    'Cetirizine 10mg - Take 1 tablet once daily for 5 days',
+                    'Vitamin C 500mg - Take 1 tablet daily for 7 days'
+                ];
+                instructions = 'Rest, increase fluid intake, avoid cold beverages. Return if symptoms worsen or persist beyond 7 days.';
+            } else if (symptomsLower.includes('cough') || symptomsLower.includes('cold')) {
+                diagnosis = 'Upper Respiratory Tract Infection';
+                medications = [
+                    'Dextromethorphan 15mg - Take 1 tablet every 8 hours for cough',
+                    'Ambroxol 30mg - Take 1 tablet twice daily after meals',
+                    'Paracetamol 500mg - Take as needed for discomfort'
+                ];
+                instructions = 'Warm water gargles, steam inhalation twice daily. Avoid smoking and dust exposure.';
+            } else if (symptomsLower.includes('stomach') || symptomsLower.includes('nausea')) {
+                diagnosis = 'Gastroenteritis / Stomach Upset';
+                medications = [
+                    'Omeprazole 20mg - Take 1 capsule before breakfast for 7 days',
+                    'Ondansetron 4mg - Take 1 tablet as needed for nausea',
+                    'ORS packets - Mix 1 packet in 200ml water, take as needed'
+                ];
+                instructions = 'Light diet, avoid spicy and oily foods. Maintain hydration. Consult if symptoms persist.';
+            } else {
+                diagnosis = 'General Consultation';
+                medications = [
+                    'Multivitamin - Take 1 tablet daily after breakfast',
+                    'Follow-up recommended based on symptoms described'
+                ];
+                instructions = 'Monitor symptoms and return for follow-up consultation if needed.';
+            }
+
+            return `
+                <div style="margin-bottom: 15px;">
+                    <strong>Patient:</strong> ${patient.name} (${patient.age}Y/${patient.gender})<br>
+                    <strong>Date:</strong> ${new Date().toLocaleDateString()}
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <strong>Diagnosis:</strong> ${diagnosis}
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <strong>Prescription:</strong>
+                    <ul style="margin-left: 20px; margin-top: 5px;">
+                        ${medications.map(med => `<li style="margin-bottom: 5px;">${med}</li>`).join('')}
+                    </ul>
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <strong>Instructions:</strong><br>
+                    ${instructions}
+                </div>
+                
+                <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd; font-size: 12px; color: #666;">
+                    <em>This prescription was generated using AI assistance. Please review and modify as clinically appropriate.</em>
+                </div>
+            `;
+        }
+
+        function savePrescription() {
+            // Simulate saving to MCP server
+            alert('Prescription saved successfully to MCP server!');
+        }
+
+        function printPrescription() {
+            window.print();
+        }
+
+        function toggleAddPatient() {
+            const form = document.getElementById('addPatientForm');
+            form.classList.toggle('show');
+        }
+
+        function addPatient() {
+            const name = document.getElementById('newPatientName').value;
+            const age = document.getElementById('newPatientAge').value;
+            const gender = document.getElementById('newPatientGender').value;
+            const history = document.getElementById('newPatientHistory').value;
+
+            if (!name || !age || !gender) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            // Generate new patient ID
+            const patientIds = Object.keys(patientData);
+            const newId = 'P' + String(patientIds.length + 1).padStart(3, '0');
+
+            // Add to patient data
+            patientData[newId] = {
+                name: name,
+                age: parseInt(age),
+                gender: gender,
+                history: history || 'No significant history',
+                lastVisit: new Date().toLocaleDateString()
+            };
+
+            // Add to patient list
+            const patientList = document.getElementById('patientList');
+            const newPatientItem = document.createElement('div');
+            newPatientItem.className = 'patient-item';
+            newPatientItem.onclick = () => selectPatient(newPatientItem, newId);
+            newPatientItem.innerHTML = `
+                <div class="patient-name">${name}</div>
+                <div class="patient-id">ID: ${newId}</div>
+                <div class="patient-info">Age: ${age} | ${gender}</div>
+                <div class="patient-info">Last Visit: ${new Date().toLocaleDateString()}</div>
+                <span class="status-badge status-active">Active</span>
+            `;
+            patientList.appendChild(newPatientItem);
+
+            // Clear form
+            document.getElementById('newPatientName').value = '';
+            document.getElementById('newPatientAge').value = '';
+            document.getElementById('newPatientGender').value = '';
+            document.getElementById('newPatientHistory').value = '';
+            
+            // Hide form
+            document.getElementById('addPatientForm').classList.remove('show');
+            
+            alert('Patient added successfully!');
+        }
+    </script>
+</body>
+</html>
